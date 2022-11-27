@@ -61,24 +61,21 @@ void toStack(){
 int main(){
     int choice,data;
     while(1){
-        printf("Enter\n");
-        printf("1.Insert to original queue\n");
-        printf("2.Delete from original queue\n");
-        printf("3.Print reversed queue\n");
+        printf("Enter\n1 for enqueue\n");
+        "2 for dequeue\n3 for reverse queue\n");
         scanf("%d",&choice);
         switch(choice){
-            case 1: printf("Enter the data: ");
-                    scanf("%d",&data);
-                    insert(data);
-                    printList(front); break;
-            case 2: delete();
-            	    printList(front);break;
-            case 3: printList(front);
-            	      toStack();
-                    printList(front);
-                    exit(1); 
-            default :
-            printf("Invalid option\n");
+            case 1:  printf("Enter the data: ");
+                     scanf("%d",&data);
+                     insert(data);
+                     printList(front); break;
+            case 2:  delete();
+            	     printList(front);break;
+            case 3:  printList(front);
+            	     toStack();
+                     printList(front);
+                     exit(1); 
+            default : printf("Invalid option\n");
         }
     }
 }
