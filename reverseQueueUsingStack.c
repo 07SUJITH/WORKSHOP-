@@ -6,7 +6,7 @@ struct node{
     int data;
     struct node* next;
 }*front=NULL,*rear=NULL;
-void insert(int data){
+void enqueue(int data){
     struct node* newNode=malloc(sizeof(struct node));
     newNode->data=data;
     newNode->next=NULL;
@@ -19,17 +19,28 @@ void insert(int data){
 }
 void printList(struct node *temp){
     printf("Queue : ");
+    if(front==NULL){
+    	printf("Empty \n");return;
+    }
     while(temp){
         printf("%d  ",temp->data);
         temp=temp->next;
     }
     printf("\n");
 }
-void delete(){
+void dequeue(){
+    if(front==NULL)
+    	printf("list empty \n");
+    else if(front==rear){
+     	free(front);
+     	front=rear=NULL;
+     	}
+    else{
     struct node *temp=front;
     printf("Deleted :%d ",temp->data);
     front=front->next;
     free(temp);
+    }
 }
 void push(int data){
      if(top==MAX-1){
@@ -56,20 +67,20 @@ void toStack(){
     }
     rear=NULL;
     for(int i=0;i<j;i++)
-        insert(pop());
+        enqueue(pop());
 }
 int main(){
     int choice,data;
     while(1){
-        printf("Enter\n1 for enqueue\n");
+        printf("Enter\n1 for enqueue\n"
         "2 for dequeue\n3 for reverse queue\n");
         scanf("%d",&choice);
         switch(choice){
             case 1:  printf("Enter the data: ");
                      scanf("%d",&data);
-                     insert(data);
+                     enqueue(data);
                      printList(front); break;
-            case 2:  delete();
+            case 2:  dequeue();
             	     printList(front);break;
             case 3:  printList(front);
             	     toStack();
