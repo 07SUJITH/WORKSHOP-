@@ -1,11 +1,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 #define MAX 100
+
 int stack[MAX],top=-1;
 struct node{
     int data;
     struct node* next;
 }*front=NULL,*rear=NULL;
+
 void enqueue(int data){
     struct node* newNode=malloc(sizeof(struct node));
     newNode->data=data;
@@ -17,6 +19,7 @@ void enqueue(int data){
         rear=newNode;
     }
 }
+
 void printList(struct node *temp){
     printf("Queue : ");
     if(front==NULL){
@@ -28,6 +31,7 @@ void printList(struct node *temp){
     }
     printf("\n");
 }
+
 void dequeue(){
     if(front==NULL)
     	printf("list empty \n");
@@ -42,15 +46,18 @@ void dequeue(){
     free(temp);
     }
 }
+
 void push(int data){
      if(top==MAX-1){
      printf("stack overflow");exit(1);
      }
     stack[++top]=data;
 }
+
 int pop(){
     return stack[top--];
 }
+
 void toStack(){
     int j=0;
     struct node *temp=front;
@@ -69,6 +76,7 @@ void toStack(){
     for(int i=0;i<j;i++)
         enqueue(pop());
 }
+
 int main(){
     int choice,data;
     while(1){
