@@ -74,14 +74,12 @@ Enter the number of terms :3
 Enter the coefficient and exponent of term 1 :5 3
 Enter the coefficient and exponent of term 2 :4 2
 Enter the coefficient and exponent of term 3 :2 1
-
 Enter Second Polynomial
 Enter the number of terms :4
 Enter the coefficient and exponent of term 1 :7 4
 Enter the coefficient and exponent of term 2 :5 3 
 Enter the coefficient and exponent of term 3 :1 2
 Enter the coefficient and exponent of term 4 :6 0
-
 First polynomial : 5x^3 +4x^2 +2x^1
 Second polynomial : 7x^4 +5x^3 +1x^2 +6x^0
 Resultant polynomial : 7x^4 +10x^3 +5x^2 +2x^1 +6x^0
