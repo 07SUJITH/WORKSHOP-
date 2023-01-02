@@ -1,0 +1,8 @@
+As it is stated in the Error message you have to "fetch first."  Use the command:
+
+git fetch origin main
+Then follow these steps to merge:
+git pull origin main
+git add .
+git commit -m 'your commit message'
+git push origin main
