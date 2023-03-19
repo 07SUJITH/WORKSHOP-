@@ -1,8 +1,73 @@
 As it is stated in the Error message you have to "fetch first."  Use the command:
 
+method 1
+--------
+
 git fetch origin main
-Then follow these steps to merge:
+git merge origin main 
+
+(The purpose of running git fetch origin main and git merge origin/main commands together is to update the local repository with the latest changes made to the remote main branch and merge them into the current local branch.
+
+The git fetch command retrieves the latest changes from the remote repository and stores them in a separate branch called origin/main, while the git merge command merges the changes from the origin/main branch into the current local branch.
+
+By running these commands together, you can ensure that your local repository is up-to-date with the latest changes made by other contributors in the remote main branch, while also integrating those changes into your current working branch.
+
+This process helps to prevent conflicts that may arise when multiple developers are working on the same codebase, and ensures that everyone is working with the most recent version of the code. Additionally, by using git fetch and git merge separately, you have more control over which changes are merged into your local branch, and can review the changes in the origin/main branch before merging them into your local branch.
+
+Overall, the git fetch and git merge commands are essential for keeping your local repository in sync with the remote repository and collaborating effectively with other developers.)
+
+method 2
+---------
+
+
 git pull origin main
-git add .
-git commit -m 'your commit message'
-git push origin main
+
+(The purpose of running git pull origin main command is to update the local repository with the latest changes made to the remote main branch and merge them into the current local branch in a single step.
+
+The git pull command combines the git fetch command, which retrieves the latest changes from the remote repository and stores them in a separate branch called origin/main, and the git merge command, which merges the changes from the origin/main branch into the current local branch.
+
+By running the git pull origin main command, you can ensure that your local repository is up-to-date with the latest changes made by other contributors in the remote main branch, while also integrating those changes into your current working branch. This process helps to prevent conflicts that may arise when multiple developers are working on the same codebase, and ensures that everyone is working with the most recent version of the code.
+
+However, it is important to note that if there are any conflicts between the changes made to the local branch and the changes made to the remote main branch, the git pull command may fail and you will need to resolve the conflicts manually using a text editor or a specialized merging tool.
+
+Overall, the git pull command is a convenient way to keep your local repository in sync with the remote repository and collaborate effectively with other developers, but it is important to review the changes made to the remote branch before merging them into your local branch to ensure that they do not cause any conflicts or issues.)
+
+
+git add , git commit , git push commands
+
+----------------------------------------
+
+The git add . command
+
+is used to stage all the changes in the current working directory for the next commit. It tells Git to start tracking new files and changes to existing files in preparation for committing those changes to the repository.
+
+The . in git add . means that all changes in the current working directory will be staged, including new files that have been added, modifications to existing files, and deletions of files.
+
+Once you have made changes to your files and run git add ., you can then commit those changes to the repository using the git commit command. The git commit command creates a snapshot of the changes you have staged and adds a message to describe those changes.
+
+It is important to note that the git add . command will stage all changes, even those that you may not want to commit yet. To stage specific changes, you can use the git add <filename> command to add specific files or use the git add -p command to interactively 
+stage specific changes within a file. This can help you avoid committing changes that are not ready or that may cause issues in the codebase.
+
+
+The git commit command 
+
+is used to create a new commit in the local repository with the changes that have been staged using the git add command.
+
+When you run git commit, Git opens the configured text editor where you can enter a commit message that describes the changes you are committing. This message should be a short summary of the changes you made and should include enough detail for others to understand the purpose of the changes.
+
+Once you have entered the commit message and saved the changes, Git creates a new commit with a unique identifier that contains the changes you have made. This commit is then added to the repository's commit history, allowing you to track changes over time and easily revert to previous versions of the code if needed.
+
+It is important to note that a commit should represent a single logical change to the codebase. If you have multiple changes that are unrelated to each other, it is best to split them into separate commits to make it easier to understand the history of the codebase.
+
+Overall, the git commit command is an essential part of Git's workflow, allowing you to record changes to the codebase and collaborate with others effectively.
+
+
+The git push command 
+
+is used to upload the local repository's commits to a remote repository. This command sends the committed changes from the local repository to the remote repository and updates the remote branch to match the local branch.
+
+When you run git push, Git sends the commits to the remote repository using the configured credentials and network protocol, such as HTTPS or SSH. Once the commits are successfully uploaded to the remote repository, the remote branch is updated to match the local branch, and other collaborators can then access and download the latest changes.
+
+It is important to note that you should always pull the latest changes from the remote repository using the git pull command before pushing any changes to avoid overwriting other people's work or creating merge conflicts. Additionally, you should only push changes that you are sure are ready to be shared with others, as they will be visible to all collaborators and cannot be easily removed once pushed.
+
+Overall, the git push command is an essential part of Git's workflow, allowing you to share your changes with other collaborators and keep the repository up-to-date with the latest changes.
