@@ -15,8 +15,8 @@ int main(void){
 	stat(path1,nfile);
 	
 	printf("user id: %d \n",nfile->st_uid);
-	printf("bloch_size :%ld \n",nfile->st_blksize);
-	printf("last acsess time : %ld \n",nfile->st_atime);
+	printf("block_size :%ld \n",nfile->st_blksize);
+	printf("last access time : %ld \n",nfile->st_atime);
 	printf("last modification :%ld \n",nfile->st_atime);
 	printf("production mode :%d \n",nfile->st_mode);
 	printf("size of the file : %ld \n",nfile->st_size);
