@@ -4,7 +4,7 @@
 #include<sys/stat.h>
 #include<fcntl.h>
 #include<stdlib.h>
-f
+
 
 int main(void){
 	char *path ,path1[10];
