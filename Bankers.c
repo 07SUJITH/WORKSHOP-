@@ -1,121 +1,95 @@
+
+// not completed . 
+
 #include <stdio.h>
+#include<stdbool.h>
 
 // Function to check if the system is in a safe state
 
-int is_safe_state(int n, int m, int available[], int allocation[], int max[], int need[]) {
+int is_safe_state(int np, int nr, int available[], int allocation[], int max[], int need[][]) {
+
 
   // Initialize finish array to false
-
-  int finish[n];
-
-  for (int i = 0; i < n; i++) {
-
+  int one_more = np;
+  int safe_sequence[50], safe = 0;
+  int finish[np];
+  for (int i = 0; i < np; i++)
     finish[i] = 0;
-
-  }
-
+    
   // Initialize work array with available resources
-
-  int work[m];
-
-  for (int i = 0; i < m; i++) {
-
+  int work[nr];
+  for (int i = 0; i < nr; i++) 
     work[i] = available[i];
 
-  }
 
   // Iterate through all processes
-
   for (int i = 0; i < n; i++) {
-
     // Find a process that is not finished and that can be allocated resources
-
     bool found = false;
-
-    for (int j = 0; j < n; j++) {
-
-      if (!finish[j] && need[j] <= work) {
-
-        found = true;
-
-        // Update the work array
-
-        for (int k = 0; k < m; k++) {
-
-          work[k] -= need[j][k];
-
-        }
-
-        // Mark the process as finished
-
-        finish[j] = true;
-
-        break;
-
+    for (int j = 0; j < np; j++) {
+    
+      bool need_available = true;
+      for(int k = 0;  k < nr ;k++)
+      	if(need[i][k] > work[k]){
+      		need_available = false;
+      		break;
+      	}
+      
+      if (!finish[j] && need_available) {
+      	safe_sequence[safe++] = j;
+        	found = true;
+        	// Update the work array
+        	for (int k = 0; k < nr; k++)
+          	work[k] += allocation[j][k];
+         	
+        	// Mark the process as finished
+        	finish[j] = true;
+        	one_more--;
+        	break;
       }
-
     }
 
     // If no such process is found, the system is not in a safe state
-
-    if (!found) {
-
+    if (!found)
       return 0;
 
-    }
-
   }
-
   // If all processes are finished, the system is in a safe state
-
   return 1;
-
 }
 
 int main() {
+  int np,nr;
+  printf("Enter the number of process: ");
+  scanf("%d",&np);
+	
+  printf("Enter the number of process: ");
+  scanf("%d",&nr);
+  int available[nr];
+  printf("Enter the available resource :")
+  for(int i =0 ;i< nr ;i++)
+  	scanf("%d",available[i]);
+  	
+   int max[np][nr],allocation[np][nr], need[np][nr];
+   printf("Enter the allocation of resource to each process :");
+   for(int i = 0; i< np ; i++)
+   	for(int j = 0; j< nr ;j++)
+   		scanf("%d",&allocation[i][j]);
+   			
+   printf("Enter the max of resource to each process :");
+   for(int i = 0; i< np ; i++)
+   	for(int j = 0; j< nr ;j++)
+   		scanf("%d",&max[i][j]);
 
-  // Number of processes
-
-  int n = 5;
-
-  // Number of resources
-
-  int m = 3;
-
-  // Available resources
-
-  int available[] = {3, 3, 2};
-
-  // Allocation of resources to processes
-
-  int allocation[][3] = {{0, 1, 0}, {2, 0, 0}, {3, 0, 2}, {2, 1, 1}, {0, 0, 2}};
-
-  // Maximum resources that can be used by processes
-
-  int max[][3] = {{7, 5, 3}, {3, 2, 2}, {9, 0, 2}, {2, 2, 2}, {4, 3, 3}};
-
-  // Need of processes
-
-  int need[n][m];
-
-  for (int i = 0; i < n; i++) {
-
-    for (int j = 0; j < m; j++) {
-
-      need[i][j] = max[i][j] - allocation[i][j];
-
-    }
-
-  }
-
+    for (int i = 0; i < np; i++)
+    	for (int j = 0; j < nr; j++)
+      		need[i][j] = max[i][j] - allocation[i][j];
+   
   // Check if the system is in a safe state
-
-  if (is_safe_state(n, m, available, allocation, max, need)) {
-
+  if (is_safe_state(n, m, available, allocation, max, need, safe_sequence)) {
     printf("The system is in a safe state\n");
-
+    
   } else {
-
     printf("The system is not in a safe state\n");
 
   }
