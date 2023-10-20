@@ -82,3 +82,26 @@ void onepass(){
 void main(){
     onepass();
 }
+/*
+symbol table
+
+FIRST	1000
+ALPHA	1009
+BETA	100c
+GAMMA	100f
+
+intermediate code of assembler 
+
+1000		COPY		START		1000
+1000		FIRST		LDA		ALPHA
+1003		**		MUL		BETA
+1006		**		STA		GAMMA
+1009		ALPHA		WORD		2
+100c		BETA		WORD		4
+100f		GAMMA		RESW		1
+1012		**		END		1000
+
+length of Program : 12
+
+
+*/
