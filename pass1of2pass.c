@@ -14,7 +14,7 @@ int hexToDecimal(char hex[]){
     int dec = 0;
     len = strlen(hex);
     for (i = 0; i < len; i++){
-        if(hex[i] >= '0' && hex[i] < '10')
+        if(hex[i] >= '0' && hex[i] <= '9')
         	temp = hex[i] - '0';
         else 
         	temp = hex[i]  - '0' - 7 ;
