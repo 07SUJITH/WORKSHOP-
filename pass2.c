@@ -1,85 +1,119 @@
+ //pass2 of two pass assembler
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-void main()
-{
-    FILE *fp1,*fp2,*fp3,*fp4,*fp5;
-    char label[10],opcode[10],operand[10],symbol[20],value[10],symbol1[20],value1[10],locctr[10];
-    char text[68], inter[3];
-    int length=0,start=0,i, count, textlen;
-    fp1 = fopen("intermediate.txt","r");
-    fp2 = fopen("length.txt","r");
-    fp5 = fopen("objectcode.txt","w");
-    fscanf(fp2,"%d",&length);
-    fscanf(fp1,"%s%s%s%s",locctr,label,opcode,operand);
-    if(strcmp(opcode,"START") == 0)
-    {
-        start = atoi(operand);
-        fprintf(fp5,"H^%s^%06d^%06d\n",label,start,length);
-        sprintf(text+count,"T^%06d^",start);
-        count += 11;
-        
+#define MAXRECORD 10
+
+void assemblyListing(FILE *fp,char *locctr,char *label,
+char *opcode,char *operand,char *objectCode){
+    fprintf(fp,"%s\t%s\t%s\t%s\t%s\n",locctr,label,opcode,operand,objectCode);
+}
+void textRecordWriting(FILE *fp,int *textlen,char *text){
+    char inter[3];
+    sprintf(inter, "%02x", ((*textlen)*3));
+    text[9] = inter[0]; text[10] = inter[1];
+    fprintf(fp, "%s", text);
+    (*textlen) = 0;
+}
+void textRecordInitializer(char* locctr,char *text,int *count){
+    int startAddress = strtol(locctr,NULL,16);
+    sprintf(text,"T^%06x^",startAddress);
+    *count = 11;
+    for (int i = 11; i < sizeof(text); i++)
+        text[i] = '\0';
+}
+void display(char *fileName){
+    FILE *fp = fopen(fileName,"r");
+    char ch = fgetc(fp);
+    while(ch != EOF){
+        printf("%c",ch);
+        ch = fgetc(fp);
+    }    
+    fclose(fp);
+}
+
+int main(){
+
+    FILE *fp1,*fp2,*fp3,*fp4,*fp5,*fp6;
+    char label[10],opcode[10],operand[10],symbol[20],value[10],locctr[10];
+    char symbol1[10],value1[10], text[81], inter[3];
+    char byteConstant[7],length[3];
+    int  count,textlen,byteLastIndex;
+    int startDecimal ;
+
+    fp1 = fopen("C:\\Users\\User\\OneDrive\\Desktop\\pass2\\intermediate.txt","r");
+    fp2 = fopen("C:\\Users\\User\\OneDrive\\Desktop\\pass2\\length.txt" ,"r");
+    fp5 = fopen("objectProgram.txt","w");
+    fp6 = fopen("assemblyListing.txt","w");
+
+    if (fp1 == NULL || fp2==NULL) {
+        printf("\nError in opening file\n");
+        return 1;
     }
-    while(!feof(fp1))
-    {
-        fscanf(fp1,"%s%s%s%s\n",locctr,label,opcode,operand);
-        printf("%s%s%s%s\n",locctr,label,opcode,operand);
-        if(strcmp(opcode,"END")==0)
-        {
-        	  sprintf(inter, "%d", (textlen*3));
-        	  text[9] = inter[0]; text[10] = inter[1];
-        	  fprintf(fp5, "%s", text);
-            fprintf(fp5,"\nE^%06d",start);
+    fscanf(fp2,"%s",length);
+    int lengthInDecimal = strtol(length ,NULL,16);
+    fscanf(fp1,"%s%s%s%s",locctr,label,opcode,operand);
+    if(!strcmp(opcode,"START")){
+        startDecimal = strtol(locctr,NULL,16);
+        fprintf(fp5,"H^%s^%06x^%06x\n",label,startDecimal,lengthInDecimal);
+        assemblyListing(fp6,locctr,label,opcode,operand,"**");
+        textRecordInitializer(locctr,text,&count);
+    }
+    while(!feof(fp1)){
+        fscanf(fp1,"%s%s%s%s",locctr,label,opcode,operand);  
+        if(!strcmp(opcode,"END")){
+            textRecordWriting(fp5,&textlen,text);
+            fprintf(fp5,"\nE^%06x",startDecimal);
+            assemblyListing(fp6,locctr,label,opcode,operand,"**");
             break;
         }
-        else if((strcmp(opcode,"RESW")==0)||(strcmp(opcode,"RESB")==0))
-        {
+
+        if(textlen>= MAXRECORD ){
+            textRecordWriting(fp5,&textlen,text);
+            if(!strcmp(opcode,"RESW") || !strcmp(opcode,"RESB")){
+                assemblyListing(fp6,locctr,label,opcode,operand,"**");
+                continue;
+            }
+            textRecordInitializer(locctr,text,&count);
+        }
+        if(!strcmp(opcode,"RESW") || !strcmp(opcode,"RESB")){
+            assemblyListing(fp6,locctr,label,opcode,operand,"**");
             continue;
         }
-        else if(strcmp(opcode,"WORD")==0)
-        {
-            sprintf(text+count,"^%06d",atoi(operand));
-            count += 7; textlen += 1;
+        else if(!strcmp(opcode,"WORD")){
+            sprintf(text+count,"^%06x",atoi(operand));
+            assemblyListing(fp6,locctr,label,opcode,operand,text+count+1);
+            count += 7; textlen++;
         }
-        else if(strcmp(opcode,"BYTE")==0)
-        {
+        else if(!strcmp(opcode,"BYTE")){
             sprintf(text+count, "%s", "^");
-            count += 1;
-            if(operand[0]=='X')
-            {
-                for(i=2;i<(strlen(operand)-1);i++)
-                {
-                    sprintf(text+count,"%c",operand[i]);
-                    count += 1;
-                }
+            count++;
+            byteLastIndex = strlen(operand)-2;
+            char *formatSpecifier = (operand[0] == 'X') ? "%c" : "%x";
+            int j =0;
+            for(int i=2; i<= byteLastIndex; i++){
+                sprintf(text+count,"%c",operand[i]);
+                sprintf(byteConstant+j,formatSpecifier,operand[i]);
+                count++;j++;
             }
-            else if(operand[0]=='C')
-            {
-                for(i=2;i<(strlen(operand)-1);i++)
-                {
-                    sprintf(text+count,"%X",operand[i]);
-                    count += 1;
-                }
-            }
-            textlen += 1;
+            byteConstant[j]='\0';
+            assemblyListing(fp6,locctr,label,opcode,operand,byteConstant);
+            textlen++;
         }
-        else
-        {
-            fp3 = fopen("optab.txt","r");
-            while(!feof(fp3))
-            {
+        else{
+            fp3 = fopen("C:\\Users\\User\\OneDrive\\Desktop\\pass2\\optab.txt","r");
+            while(!feof(fp3)){
                 fscanf(fp3,"%s\t%s\n",symbol,value);
-                if(strcmp(symbol,opcode)==0)
-                {
-                    fp4 = fopen("symtab.txt","r");
-                    while (!feof(fp4))
-                    {
+                if(!strcmp(symbol,opcode)){
+                    fp4 = fopen("C:\\Users\\User\\OneDrive\\Desktop\\pass2\\symtab.txt","r");
+                    while (!feof(fp4)){
                         fscanf(fp4,"%s\t%s\n",symbol1,value1);
-                        if(strcmp(symbol1,operand)==0)
-                        {
+                        if(strcmp(symbol1,operand)==0){
                             sprintf(text+count,"^%s%s",value,value1);
-                            count += strlen(value) + strlen(value1);
-                            textlen += 1;
+                            assemblyListing(fp6,locctr,label,opcode,operand,text+count+1);
+                            count += strlen(value) + strlen(value1) + 1;
+                            textlen++;                            
                             break;
                         }
                     }
@@ -90,8 +124,33 @@ void main()
             fclose(fp3);
         }
     }
-    printf("\nOBJECT CODE SUCESSFULLY WRITTEN TO THE FILE\n");
-    fclose(fp1);
-    fclose(fp2);
-    fclose(fp5);
+    fclose(fp1);    fclose(fp2);
+    fclose(fp5);    fclose(fp6);
+    printf("\nObject code successfully written to the file\n");
+    printf("\nAssembly Listing\n\n");
+    display("assemblyListing.txt");
+    printf("\nObject Program\n\n");
+    display("objectProgram.txt");
+    return 0;
 }
+/*
+Object code successfully written to the file
+
+Assembly Listing
+
+1000    COPY    START   1000    **
+1000    FIRST   LDA     ALPHA   001009
+1003    **      MUL     BETA    20100c
+1006    **      STA     GAMMA   0C100f
+1009    ALPHA   WORD    2       000002
+100c    BETA    WORD    4       000004
+100f    GAMMA   RESW    1       **
+1012    **      END     1000    **
+
+Object Program
+
+H^COPY^001000^000012
+T^001000^0f^001009^20100c^0C100f^000002^000004
+E^001000
+
+*/
