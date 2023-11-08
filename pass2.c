@@ -133,24 +133,3 @@ int main(){
     display("objectProgram.txt");
     return 0;
 }
-/*
-Object code successfully written to the file
-
-Assembly Listing
-
-1000    COPY    START   1000    **
-1000    FIRST   LDA     ALPHA   001009
-1003    **      MUL     BETA    20100c
-1006    **      STA     GAMMA   0C100f
-1009    ALPHA   WORD    2       000002
-100c    BETA    WORD    4       000004
-100f    GAMMA   RESW    1       **
-1012    **      END     1000    **
-
-Object Program
-
-H^COPY^001000^000012
-T^001000^0f^001009^20100c^0C100f^000002^000004
-E^001000
-
-*/
